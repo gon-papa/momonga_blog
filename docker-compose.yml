@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  api:
+    container_name: api
+    build:
+      target: base
+      context: .
+      dockerfile: docker/Dockerfile
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./src:/go/src/
+    ports:
+      - 8080:8080

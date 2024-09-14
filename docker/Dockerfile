@@ -1,0 +1,13 @@
+FROM golang:1.23 as base
+
+WORKDIR /go/src
+
+COPY ../src/go.mod ./
+# COPY go.mod go.sum ./
+RUN go mod download && go mod verify
+
+COPY ../src/* .
+RUN go build -v -o /usr/local/bin/app ./...
+
+EXPOSE 8080
+CMD ["app"]
