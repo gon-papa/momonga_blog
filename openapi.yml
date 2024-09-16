@@ -1,0 +1,90 @@
+openapi: 3.0.0
+info:
+  title: momonga blog API
+  version: 1.0.0
+  description: momonga blog API
+servers:
+  - url: https://hogehogehogedummy.com
+    description: Production server
+  - url: http://localhost:8080
+    description: Local server
+paths:
+  /login:
+    post:
+      tags:
+        - admin
+      summary: Admin login
+      description: Admin login
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/LoginSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    LoginRequest:
+      type: object
+      properties:
+        user_id:
+          type: string
+          description: User ID
+        password:
+          type: string
+          description: Password
+    LoginResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 200
+        data:
+          type: object
+          properties:
+            token:
+              type: string
+              description: JWT token
+            refreshToken:
+              type: string
+              description: Refresh token
+          required:
+            - token
+            - refreshToken
+        error:
+          type: object
+  responses:
+    LoginSuccess:
+      description: Admin login response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LoginResponse'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 400
+              data:
+                type: object
+              error:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Request

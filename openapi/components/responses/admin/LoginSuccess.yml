@@ -1,0 +1,5 @@
+description: Admin login response
+content:
+  application/json:
+    schema:
+      $ref: '../../schemas/admin/LoginResponse.yml'

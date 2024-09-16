@@ -4,7 +4,7 @@ services:
     build:
       target: base
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: docker/go/Dockerfile
     tty: true
     stdin_open: true
     volumes:

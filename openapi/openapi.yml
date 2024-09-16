@@ -1,0 +1,22 @@
+openapi: 3.0.0
+info:
+  title: momonga blog API
+  version: 1.0.0
+  description: momonga blog API
+servers:
+  - url: https://hogehogehogedummy.com
+    description: Production server
+  - url: http://localhost:8080
+    description: Local server
+paths:
+  # admin
+  /login:
+    $ref: paths/admin/login.yml
+
+  # public
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -11,6 +11,8 @@ RUN go mod download && go mod verify
 # TODO: デプロイ時のマルチステージビルドにてビルドを検討する
 # RUN go build -v -o /usr/local/bin/app ./...
 
+# TODO: 開発のみ使用するライブラリをインストールする
 RUN go install github.com/air-verse/air@latest
+RUN go install -v github.com/ogen-go/ogen/cmd/ogen@latest
 
 CMD ["air", "-c", ".air.toml"]
