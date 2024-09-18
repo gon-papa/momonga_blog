@@ -18,10 +18,10 @@ type Server struct {
 	listen net.Listener
 }
 
-func NewServer(l net.Listener, mux http.Handler) *Server {
+func NewServer(l net.Listener, handler http.Handler) *Server {
 	return &Server{
 		server: &http.Server{
-			Handler:      mux,
+			Handler:      handler,
 			ReadTimeout:  20 * time.Second,  // リクエスト全体読み込み最大時間
 			WriteTimeout: 60 * time.Second,  // レスポンス書き込みの最大時間
 			IdleTimeout:  120 * time.Second, // 次リクエストまでの最大待機時間(キープアライブ)
