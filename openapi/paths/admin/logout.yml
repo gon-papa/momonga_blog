@@ -1,0 +1,13 @@
+post:
+  tags:
+    - admin
+  summary: Admin logout
+  description: Admin logout
+  operationId: logout
+  security:
+    - bearerAuth: []
+  responses:
+    200:
+      $ref: '../../components/responses/common/NotContent.yml'
+    400:
+      $ref: '../../components/responses/common/BadRequest.yml'

@@ -12,6 +12,10 @@ paths:
   # admin
   /login:
     $ref: paths/admin/login.yml
+  /logout:
+    $ref: paths/admin/logout.yml
+  /admin/blog:
+    $ref: paths/admin/blog.yml
 
   # public
 components:

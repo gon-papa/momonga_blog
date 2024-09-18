@@ -1,0 +1,58 @@
+get:
+  tags:
+    - blog
+  summary: Get blog list
+  description: Get blog list
+  operationId: getBlogList
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: page
+      in: query
+      description: Page number
+      required: false
+      schema:
+        type: integer
+        format: int32
+    - name: limit
+      in: query
+      description: Number of items per page
+      required: false
+      schema:
+        type: integer
+        format: int32
+  responses:
+    200:
+      description: Get blog list
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 200
+              data:
+                type: object
+                properties:
+                  blogs:
+                    # 仮の定義
+                    type: object
+                  total:
+                    type: integer
+                    example: 1
+                  page:
+                    type: integer
+                    example: 1
+                  limit:
+                    type: integer
+                    example: 10
+                required:
+                  - blogs
+                  - total
+                  - page
+                  - limit
+              error:
+                type: object
+    400:
+      $ref: '../../components/responses/common/BadRequest.yml'
