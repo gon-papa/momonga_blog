@@ -25,4 +25,4 @@ openapi: ## Generate openapi
 	cp ./openapi.yml ./src/openapi.yml
 
 openapi_g:
-	docker exec -it api bash -c "ogen -package ogen -target ogen -clean ./openapi.yml"
+	docker exec -it api bash -c "ogen -package api -target api -clean ./openapi.yml"
