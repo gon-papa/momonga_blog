@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"log"
+	"momonga_blog/pkg/logging"
 	"net"
 	"net/http"
 	"os"
@@ -39,15 +39,15 @@ func (s *Server) Run(ctx context.Context) error {
 		// ErrServerClosedは正常にサーバーがシャットダウンされたことを示すため、エラー判定から除外
 		if err := s.server.Serve(s.listen); err != nil &&
 			err != http.ErrServerClosed {
-			log.Printf("failed to close: %+v", err)
-			return err
-		}
+				logging.ErrorLogger.Error("サーバーのクローズに失敗しました", "error", err)
+				return err
+			}
 		return nil
 	})
 
 	<-ctx.Done()
 	if err := s.server.Shutdown(context.Background()); err != nil {
-		log.Printf("failed to shutdown: %+v", err)
+		logging.ErrorLogger.Error("サーバーのシャットダウンに失敗しました", "error", err)
 	}
 
 	return eg.Wait()

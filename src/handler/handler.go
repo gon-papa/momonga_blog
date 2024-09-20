@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"momonga_blog/api"
+	"net/http"
 )
 
 type Handler struct {}
@@ -15,7 +16,7 @@ func (h *Handler) Login(ctx context.Context, req *api.LoginRequest) (api.LoginRe
 	}
 
 	return &api.LoginResponse{
-		Status: api.NewOptInt(200),
+		Status: api.NewOptInt(http.StatusOK),
 		Data: api.NewOptLoginResponseData(data),
 		Error: nil,
 	}, nil
@@ -24,7 +25,7 @@ func (h *Handler) Login(ctx context.Context, req *api.LoginRequest) (api.LoginRe
 
 func (h *Handler) Logout(ctx context.Context) (api.LogoutRes, error) {
 	return &api.NotContent{
-		Status: api.NewOptInt(200),
+		Status: api.NewOptInt(http.StatusOK),
 		Data: nil,
 		Error: nil,
 	}, nil
@@ -39,7 +40,7 @@ func (h *Handler) GetBlogList(ctx context.Context, params api.GetBlogListParams)
 	  }
 
 	return &api.GetBlogListOK{
-		Status: api.NewOptInt(200),
+		Status: api.NewOptInt(http.StatusOK),
 		Data: api.NewOptGetBlogListOKData(data),
 		Error: nil,
 	}, nil
