@@ -38,7 +38,7 @@ func Init() error {
     if err != nil {
         return fmt.Errorf("アクセスログが開けませんでした: %w", err)
     }
-    accessHandler := slog.NewJSONHandler(accessLogFile, opt)
+    accessHandler := slog.NewJSONHandler(accessLogFile, nil)
     AccessLogger = slog.New(accessHandler)
 
     return nil

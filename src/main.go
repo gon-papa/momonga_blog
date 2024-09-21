@@ -6,8 +6,10 @@ import (
 	"momonga_blog/api"
 	"momonga_blog/config"
 	"momonga_blog/handler"
+	"momonga_blog/middleware"
 	"momonga_blog/pkg/logging"
 	"net"
+	"net/http"
 	"os"
 )
 
@@ -52,8 +54,9 @@ func run(context context.Context) error {
             logging.ErrorLogger.Error("serverの作成に失敗しました。", "error", err)
             os.Exit(1)
         }
-
-    s := NewServer(l, srv)
+    
+    addMiddlewareSrv := addMiddleware(srv)
+    s := NewServer(l, addMiddlewareSrv)
     return s.Run(context)
 }
 
@@ -63,4 +66,12 @@ func getHandler() *handler.Handler {
 
 func getServer(handler *handler.Handler) (*api.Server, error) {
     return api.NewServer(handler, nil)
+}
+
+func addMiddleware(h http.Handler) http.Handler {
+    return middleware.ChainMiddleware(
+        h,
+        middleware.AccessLogMiddleware,
+        middleware.RecoveryMiddleware,
+    )
 }

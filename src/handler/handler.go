@@ -9,6 +9,19 @@ import (
 type Handler struct {}
 var _ api.Handler = &Handler{}
 
+func (h *Handler) NewError(ctx context.Context, err error) *api.ErrorResponseStatusCode {
+	return &api.ErrorResponseStatusCode{
+		StatusCode: http.StatusInternalServerError,
+		Response: api.ErrorResponse{
+			Status: api.NewOptInt(http.StatusInternalServerError),
+			Data:   nil,
+			Error:  api.NewOptErrorResponseError(api.ErrorResponseError{
+				Message: api.NewOptString("Internal Server Error"),
+			}),
+		},
+	}
+}
+
 func (h *Handler) Login(ctx context.Context, req *api.LoginRequest) (api.LoginRes, error) {
 	data := api.LoginResponseData{
 		Token: "xxxx",

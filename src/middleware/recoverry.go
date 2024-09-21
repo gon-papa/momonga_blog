@@ -1,0 +1,48 @@
+package middleware
+
+import (
+	"encoding/json"
+	"momonga_blog/api"
+	"momonga_blog/pkg/logging"
+	"net/http"
+)
+
+func RecoveryMiddleware(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        defer func() {
+            if err := recover(); err != nil {
+                // エラーログを記録
+                logging.ErrorLogger.Error("Panic recovered", "error", err)
+
+                // エラーレスポンスを構築
+                errorResponse := &api.ErrorResponseStatusCode{
+                    StatusCode: http.StatusInternalServerError,
+                    Response: api.ErrorResponse{
+                        Status: api.NewOptInt(http.StatusInternalServerError),
+                        Data:   nil,
+                        Error: api.NewOptErrorResponseError(api.ErrorResponseError{
+                            Message: api.NewOptString("Internal Server Error"),
+                        }),
+                    },
+                }
+
+                w.Header().Set("Content-Type", "application/json")
+                w.WriteHeader(errorResponse.StatusCode)
+
+				// エラーレスポンスをJSONに変換
+                responseBody, marshalErr := json.Marshal(errorResponse.Response)
+                if marshalErr != nil {
+                    logging.ErrorLogger.Error("Failed to marshal error response", "error", marshalErr)
+                    http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+                    return
+                }
+
+                // レスポンスを書き込む
+                if _, writeErr := w.Write(responseBody); writeErr != nil {
+                    logging.ErrorLogger.Error("Failed to write response", "error", writeErr)
+                }
+            }
+        }()
+        next.ServeHTTP(w, r)
+    })
+}

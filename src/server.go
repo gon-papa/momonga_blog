@@ -19,6 +19,7 @@ type Server struct {
 }
 
 func NewServer(l net.Listener, handler http.Handler) *Server {
+
 	return &Server{
 		server: &http.Server{
 			Handler:      handler,
