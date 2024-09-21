@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"encoding/json"
-	"momonga_blog/api"
+	"momonga_blog/handler/response"
 	"momonga_blog/pkg/logging"
 	"net/http"
 )
@@ -15,16 +15,11 @@ func RecoveryMiddleware(next http.Handler) http.Handler {
                 logging.ErrorLogger.Error("Panic recovered", "error", err)
 
                 // エラーレスポンスを構築
-                errorResponse := &api.ErrorResponseStatusCode{
-                    StatusCode: http.StatusInternalServerError,
-                    Response: api.ErrorResponse{
-                        Status: api.NewOptInt(http.StatusInternalServerError),
-                        Data:   nil,
-                        Error: api.NewOptErrorResponseError(api.ErrorResponseError{
-                            Message: api.NewOptString("Internal Server Error"),
-                        }),
-                    },
-                }
+                errorResponse := response.ErrorResponse(
+                    http.StatusInternalServerError,
+                    http.StatusText(http.StatusInternalServerError),
+                    nil,
+                )
 
                 w.Header().Set("Content-Type", "application/json")
                 w.WriteHeader(errorResponse.StatusCode)

@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"momonga_blog/api"
+	"momonga_blog/handler/response"
 	"net/http"
 )
 
@@ -10,16 +11,11 @@ type Handler struct {}
 var _ api.Handler = &Handler{}
 
 func (h *Handler) NewError(ctx context.Context, err error) *api.ErrorResponseStatusCode {
-	return &api.ErrorResponseStatusCode{
-		StatusCode: http.StatusInternalServerError,
-		Response: api.ErrorResponse{
-			Status: api.NewOptInt(http.StatusInternalServerError),
-			Data:   nil,
-			Error:  api.NewOptErrorResponseError(api.ErrorResponseError{
-				Message: api.NewOptString("Internal Server Error"),
-			}),
-		},
-	}
+	return response.ErrorResponse(
+		http.StatusInternalServerError,
+		http.StatusText(http.StatusInternalServerError),
+		err,
+	)
 }
 
 func (h *Handler) Login(ctx context.Context, req *api.LoginRequest) (api.LoginRes, error) {
