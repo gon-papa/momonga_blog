@@ -56,3 +56,5 @@ get:
                 type: object
     400:
       $ref: '../../components/responses/common/BadRequest.yml'
+    default:
+      $ref: '../../components/responses/common/ErrorResponse.yml'

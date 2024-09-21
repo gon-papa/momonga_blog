@@ -27,6 +27,8 @@ paths:
           $ref: '#/components/responses/LoginSuccess'
         '400':
           $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
   /logout:
     post:
       tags:
@@ -41,6 +43,8 @@ paths:
           $ref: '#/components/responses/NotContent'
         '400':
           $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
   /admin/blog:
     get:
       tags:
@@ -99,6 +103,8 @@ paths:
                     type: object
         '400':
           $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
 components:
   securitySchemes:
     bearerAuth:
@@ -136,6 +142,24 @@ components:
         error:
           type: object
   responses:
+    ErrorResponse:
+      description: Error Response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 500
+              data:
+                type: object
+              error:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
     LoginSuccess:
       description: Admin login response
       content:
