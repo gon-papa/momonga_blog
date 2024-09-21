@@ -10,6 +10,10 @@ var (
     AppLogger    *slog.Logger
     AccessLogger *slog.Logger
     ErrorLogger  *slog.Logger
+
+    appLogFile    *os.File
+    accessLogFile *os.File
+    errorLogFile  *os.File
 )
 
 func Init() error {
@@ -43,3 +47,16 @@ func Init() error {
 
     return nil
 }
+
+func Close() {
+    if appLogFile != nil {
+        appLogFile.Close()
+    }
+    if errorLogFile != nil {
+        errorLogFile.Close()
+    }
+    if accessLogFile != nil {
+        accessLogFile.Close()
+    }
+}
+

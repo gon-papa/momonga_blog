@@ -17,8 +17,9 @@ func main() {
     // ログの初期化
     if err := logging.Init(); err != nil {
         fmt.Printf("Failed to open log file: %v\n", err)
-        os.Exit(1)
+        return
     }
+    defer logging.Close()
 
     // サーバーの起動
     if err := run(context.Background()); err != nil {
@@ -33,7 +34,7 @@ func run(context context.Context) error {
     if err != nil {
         fmt.Printf("server not run: %v\n", err)
         logging.ErrorLogger.Error("設定ファイルの読み込みに失敗しました。", "error", err)
-		os.Exit(1)
+		return err
     }
 
     os.Setenv("Timezone", cnf.TimeZone)
@@ -41,7 +42,7 @@ func run(context context.Context) error {
     l, err := net.Listen("tcp", cnf.Port)
     if err != nil {
         logging.ErrorLogger.Error("指定ポートでのサーバーの起動に失敗しました。", "port", cnf.Port, "error", err)
-        os.Exit(1)
+        return err
     }
 
     url := fmt.Sprintf("http://%s", l.Addr().String())
@@ -52,7 +53,7 @@ func run(context context.Context) error {
         srv, err := getServer(h)
         if err != nil {
             logging.ErrorLogger.Error("serverの作成に失敗しました。", "error", err)
-            os.Exit(1)
+            return err
         }
     
     addMiddlewareSrv := addMiddleware(srv)
