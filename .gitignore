@@ -3,3 +3,4 @@
 /src/pre_cmd.txt
 /src/api
 /src/logs
+.env

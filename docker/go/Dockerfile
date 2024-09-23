@@ -2,7 +2,7 @@ FROM golang:1.23 as base
 
 WORKDIR /go/src
 
-COPY ../src/.air.toml ../src/go.mod ./
+COPY ../../src/.air.toml ../../src/go.mod ./
 # COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 
@@ -14,5 +14,6 @@ RUN go mod download && go mod verify
 # TODO: 開発のみ使用するライブラリをインストールする
 RUN go install github.com/air-verse/air@latest
 RUN go install -v github.com/ogen-go/ogen/cmd/ogen@latest
+RUN go install -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@v4.18.1
 
 CMD ["air", "-c", ".air.toml"]

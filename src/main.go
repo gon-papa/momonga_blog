@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"momonga_blog/api"
 	"momonga_blog/config"
+	"momonga_blog/database"
 	"momonga_blog/handler"
 	"momonga_blog/middleware"
 	"momonga_blog/pkg/logging"
@@ -20,6 +21,24 @@ func main() {
         return
     }
     defer logging.Close()
+
+    // DBの起動
+    _, err := database.New()
+    if err != nil {
+        fmt.Printf("db not run: %v\n", err)
+        logging.ErrorLogger.Error("DBの接続に失敗しました。", "error", err)
+        os.Exit(1)
+    }
+
+    if err := database.HealthCheck(); err != nil {
+        fmt.Printf("db not run: %v\n", err)
+        logging.ErrorLogger.Error("DBのヘルスチェックに失敗しました。", "error", err)
+        os.Exit(1)
+    }
+
+    logging.AppLogger.Info("DBの接続に成功しました。")
+
+    defer database.Close()
 
     // サーバーの起動
     if err := run(context.Background()); err != nil {
