@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 	"momonga_blog/config"
+	"momonga_blog/pkg/logging"
 	"sync"
 	"time"
 
@@ -28,6 +29,7 @@ func New() (*gorm.DB, error) {
 		dns := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local&timeout=10s",
 			cnf.DbUser, cnf.DbPassword, cnf.DbHost, cnf.DbPort, cnf.DbName,
 		)
+		logging.AppLogger.Info("DB接続情報", "dns", dns)
 		Db, err = gorm.Open(mysql.Open(dns), &gorm.Config{})
 		if err != nil {
 			e = err
