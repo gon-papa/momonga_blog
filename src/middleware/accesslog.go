@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"momonga_blog/pkg/logging"
+	"momonga_blog/internal/logging"
 	"net/http"
 	"time"
 )

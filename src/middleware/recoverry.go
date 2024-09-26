@@ -3,7 +3,7 @@ package middleware
 import (
 	"encoding/json"
 	"momonga_blog/handler/response"
-	"momonga_blog/pkg/logging"
+	"momonga_blog/internal/logging"
 	"net/http"
 )
 

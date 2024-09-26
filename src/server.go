@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"momonga_blog/pkg/logging"
+	"momonga_blog/internal/logging"
 	"net"
 	"net/http"
 	"os"

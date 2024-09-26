@@ -3,7 +3,7 @@ package database
 import (
 	"fmt"
 	"momonga_blog/config"
-	"momonga_blog/pkg/logging"
+	"momonga_blog/internal/logging"
 	"sync"
 	"time"
 
