@@ -36,7 +36,10 @@ migrate_up: ## Migrate up
 	docker exec -it api bash -c "migrate --path database/migration --database '${DBMS}://${DB_USER}:${DB_PASSWORD}@tcp(${DB_HOST}:${DB_PORT})/${DB_NAME}' --verbose up"
 
 migrate_down: ## Migrate down
-	docker exec -it api bash -c "migrate --path database/migration --database '${DBMS}://${DB_USER}:${DB_PASSWORD}@tcp(${DB_HOST}:${DB_PORT})/${DB_NAME}' --verbose down"
+	docker exec -it api bash -c "migrate --path database/migration --database '${DBMS}://${DB_USER}:${DB_PASSWORD}@tcp(${DB_HOST}:${DB_PORT})/${DB_NAME}' --verbose down 1"
 
 migrate_create: ## Migrate create
 	docker exec -it api bash -c "migrate create -ext sql -dir database/migration -seq ${name}"
+
+generate_secret_key: ## Generate secret key
+	docker exec -it api bash -c "openssl rand -hex 32"

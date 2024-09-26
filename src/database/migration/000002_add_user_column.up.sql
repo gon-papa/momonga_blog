@@ -1,0 +1,1 @@
+ALTER TABLE users ADD COLUMN token_expiry DATETIME AFTER refresh_token;

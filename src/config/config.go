@@ -23,6 +23,7 @@ type Config struct {
     DbMaxIdleConn int `env:"DB_MAX_IDLE_CONN" envDefault:"1"`
     DbMaxOpenConn int `env:"DB_MAX_OPEN_CONN" envDefault:"10"`
     DbConnMaxLifetime int `env:"DB_CONN_MAX_LIFETIME" envDefault:"1"`
+    SecretKey string `env:"SECRET_KEY" envDefault:"secret_key"`
 }
 
 var (
