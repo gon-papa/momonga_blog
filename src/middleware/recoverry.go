@@ -5,14 +5,16 @@ import (
 	"momonga_blog/handler/response"
 	"momonga_blog/internal/logging"
 	"net/http"
+	"runtime/debug"
 )
 
 func RecoveryMiddleware(next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         defer func() {
             if err := recover(); err != nil {
+                stackTrace := debug.Stack()
                 // エラーログを記録
-                logging.ErrorLogger.Error("Panic recovered", "error", err)
+                logging.ErrorLogger.Error("Panic recovered", "error", err, "stack", string(stackTrace))
 
                 // エラーレスポンスを構築
                 errorResponse := response.ErrorResponse(

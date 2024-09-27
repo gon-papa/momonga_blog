@@ -12,7 +12,7 @@ import (
 )
 
 var (
-    Db   *gorm.DB
+    db   *gorm.DB
     once sync.Once
 )
 
@@ -30,12 +30,12 @@ func New() (*gorm.DB, error) {
 			cnf.DbUser, cnf.DbPassword, cnf.DbHost, cnf.DbPort, cnf.DbName,
 		)
 		logging.AppLogger.Info("DB接続情報", "dns", dns)
-		Db, err = gorm.Open(mysql.Open(dns), &gorm.Config{})
+		db, err = gorm.Open(mysql.Open(dns), &gorm.Config{})
 		if err != nil {
 			e = err
 			return
 		}
-		sqlDb, err := Db.DB()
+		sqlDb, err := db.DB()
 		if err != nil {
 			e = err
 			return
@@ -49,15 +49,15 @@ func New() (*gorm.DB, error) {
 		sqlDb.SetConnMaxLifetime(time.Duration(cnf.DbConnMaxLifetime) * time.Hour)
 	})
 
-	return Db, e
+	return db, e
 }
 
 func HealthCheck() error {
-	if Db == nil {
+	if db == nil {
 		return fmt.Errorf("db is not connected")
 	}
 
-	sqlDb, err := Db.DB()
+	sqlDb, err := db.DB()
 	if err != nil {
 		return err
 	}
@@ -67,10 +67,17 @@ func HealthCheck() error {
 
 
 func Close() error {
-	db, err := Db.DB()
+	db, err := db.DB()
 	if err != nil {
 		return err
 	}
 
 	return db.Close()
+}
+
+func GetDB()(*gorm.DB, error) {
+	if db == nil {
+		return nil, fmt.Errorf("db is not connected")
+	}
+	return db, nil
 }

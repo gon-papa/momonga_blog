@@ -20,7 +20,6 @@ type Clime struct {
 }
 
 var stretchCost = 12
-var alg = "HS256"
 var accessTokenExp = 12 * time.Hour
 
 // パスワードのハッシュ化
@@ -58,7 +57,8 @@ func CreateRefreshTokenExpire(days int) time.Time {
 }
 
 // アクセストークン作成
-func CreateAccessToken(clime Clime) (string, error) {
+func CreateAccessToken(uuid string) (string, error) {
+	clime := newClime(uuid)
 	// jwt作成
 	jwt := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": clime.Sub,
@@ -71,7 +71,7 @@ func CreateAccessToken(clime Clime) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	tokenString, err := jwt.SignedString(cnf.SecretKey)
+	tokenString, err := jwt.SignedString([]byte(cnf.SecretKey))
 	if err != nil {
 		return "", err
 	}
@@ -79,7 +79,7 @@ func CreateAccessToken(clime Clime) (string, error) {
 }
 
 // クレーム作成
-func NewClime(uuid string) Clime {
+func newClime(uuid string) Clime {
 	return Clime{
 		Sub: uuid,
 		Aud: "admin",
@@ -95,7 +95,7 @@ func parseAccessToken(tokenString string) (*jwt.Token, error) {
 	}
 	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 		return cnf.SecretKey, nil
 	})
