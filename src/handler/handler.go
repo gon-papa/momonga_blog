@@ -17,3 +17,11 @@ func (h *Handler) NewError(ctx context.Context, err error) *api.ErrorResponseSta
 		err,
 	)
 }
+
+func (h *Handler) NewErrorResponse(ctx context.Context, status int, message string, err error) *api.ErrorResponseStatusCode {
+	return response.ErrorResponse(
+		status,
+		message,
+		err,
+	)
+}
