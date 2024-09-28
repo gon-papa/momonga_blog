@@ -7,6 +7,7 @@ import (
 	"momonga_blog/config"
 	"momonga_blog/database"
 	"momonga_blog/handler"
+	"momonga_blog/internal/auth"
 	"momonga_blog/internal/logging"
 	"momonga_blog/middleware"
 	"net"
@@ -85,7 +86,9 @@ func getHandler() *handler.Handler {
 }
 
 func getServer(handler *handler.Handler) (*api.Server, error) {
-    return api.NewServer(handler, nil)
+    authHandler := auth.NewLoginUseCase()
+    
+    return api.NewServer(handler, authHandler)
 }
 
 func addMiddleware(h http.Handler) http.Handler {

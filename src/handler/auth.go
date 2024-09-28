@@ -40,6 +40,22 @@ func (h *Handler) Login(ctx context.Context, req *api.LoginRequest) (api.LoginRe
 
 
 func (h *Handler) Logout(ctx context.Context) (api.LogoutRes, error) {
+	useCase := auth.NewLoginUseCase()
+	err := useCase.Logout(ctx)
+
+	if err != nil {
+		logging.ErrorLogger.Error("Failed to logout", "error", err)
+		return &api.BadRequest{
+			Status: api.NewOptInt(http.StatusBadRequest),
+			Data: nil,
+			Error: api.NewOptBadRequestError(
+				api.BadRequestError{
+					Message: api.NewOptString(err.Error()),
+				},
+			),
+		}, nil
+	}
+
 	return &api.NotContent{
 		Status: api.NewOptInt(http.StatusOK),
 		Data: nil,

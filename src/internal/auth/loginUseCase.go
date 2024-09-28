@@ -3,12 +3,14 @@ package auth
 import (
 	"context"
 	"fmt"
+	"momonga_blog/api"
 	"momonga_blog/repository"
 )
 
 type LoginUseCaseInterface interface {
 	Login(ctx context.Context, userId string, password string) (*Token, error)
-	Logout(ctx context.Context) (bool, error)
+	Logout(ctx context.Context) error
+	HandleBearerAuth(ctx context.Context, operationName string, t api.BearerAuth) (context.Context, error)
 }
 
 type loginUseCase struct {
@@ -16,6 +18,7 @@ type loginUseCase struct {
 }
 
 var _ LoginUseCaseInterface = &loginUseCase{}
+var _ api.SecurityHandler = &loginUseCase{}
 
 func NewLoginUseCase() LoginUseCaseInterface {
 	return &loginUseCase{
@@ -40,7 +43,7 @@ func (luc *loginUseCase) Login(ctx context.Context, userId string, password stri
 	}
 
 	// トークンとリフレッシュトークンを返す
-	token, err := CreateAccessToken(user.UserID)
+	token, err := CreateAccessToken(user.UUID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create access token: %w", err)
 	}
@@ -60,6 +63,45 @@ func (luc *loginUseCase) Login(ctx context.Context, userId string, password stri
 	}, nil
 }
 
-func (luc *loginUseCase) Logout(ctx context.Context) (bool, error) {
-	return true, nil
+func (luc *loginUseCase) Logout(ctx context.Context) error {
+	uuid := ctx.Value(AuthUuid)
+	if uuid == nil {
+		return fmt.Errorf("login user not found")
+	}
+
+	user, err := luc.repository.FindUserByUuid(uuid.(string))
+	if err != nil {
+		return fmt.Errorf("failed to get user: %w", err)
+	}
+
+	if !user.Active {
+		return fmt.Errorf("user is not active")
+	}
+
+	err = luc.repository.SaveLogout(user)
+	if err != nil {
+		return fmt.Errorf("failed to save logout: %w", err)
+	}
+	return nil
+}
+
+type contextKey string
+const AuthUuid contextKey = "auth_uuid"
+
+func (luc *loginUseCase) HandleBearerAuth(ctx context.Context, operationName string, t api.BearerAuth) (context.Context, error) {
+	uuid, err := AuthAccessToken(t.Token)
+	if err != nil {
+		return ctx, fmt.Errorf("failed to auth access token: %w", err)
+	}
+
+	user, err := luc.repository.FindUserByUuid(uuid)
+	if err != nil {
+		return ctx, fmt.Errorf("failed to find user by uuid: %w", err)
+	}
+
+	if user == nil {
+		return ctx, fmt.Errorf("user not found")
+	}
+
+	return context.WithValue(ctx, AuthUuid, uuid), nil
 }

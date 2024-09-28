@@ -16,7 +16,6 @@ type Clime struct {
 	Aud string `json:"aud"`
 	Exp int64  `json:"exp"`
 	Alg string `json:"alg" default:"HS256"`
-	Typ string `json:"typ" default:"JWT"`
 }
 
 var stretchCost = 12
@@ -64,8 +63,6 @@ func CreateAccessToken(uuid string) (string, error) {
 		"sub": clime.Sub,
 		"aud": clime.Aud,
 		"exp": clime.Exp,
-		"alg": clime.Alg,
-		"typ": clime.Typ,
 	})
 	cnf, err := config.GetConfig()
 	if err != nil {
@@ -97,7 +94,7 @@ func parseAccessToken(tokenString string) (*jwt.Token, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return cnf.SecretKey, nil
+		return []byte(cnf.SecretKey), nil
 	})
 }
 
