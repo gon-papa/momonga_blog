@@ -8,3 +8,6 @@ openapi/openapi.yml:
 openapi/paths/admin/login.yml:
   security-defined:
     - '#/post'
+openapi/paths/admin/refresh.yml:
+  security-defined:
+    - '#/post'

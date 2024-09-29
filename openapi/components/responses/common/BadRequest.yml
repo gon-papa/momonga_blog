@@ -15,3 +15,7 @@ content:
             message:
               type: string
               example: 'Bad Request'
+      required:
+        - status
+        - data
+        - error

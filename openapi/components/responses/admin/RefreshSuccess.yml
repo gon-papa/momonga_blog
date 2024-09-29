@@ -1,0 +1,5 @@
+description: Admin refresh token response
+content:
+  application/json:
+    schema:
+      $ref: '../../schemas/admin/RefreshResponse.yml'

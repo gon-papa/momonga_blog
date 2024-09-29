@@ -45,6 +45,26 @@ paths:
           $ref: '#/components/responses/BadRequest'
         default:
           $ref: '#/components/responses/ErrorResponse'
+  /refresh:
+    post:
+      tags:
+        - admin
+      summary: Admin refresh token
+      description: Admin refresh token
+      operationId: refresh_token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/RefreshSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
   /admin/blog:
     get:
       tags:
@@ -121,6 +141,9 @@ components:
         password:
           type: string
           description: Password
+      required:
+        - user_id
+        - password
     LoginResponse:
       type: object
       properties:
@@ -141,6 +164,42 @@ components:
             - refreshToken
         error:
           type: object
+      required:
+        - status
+        - data
+        - error
+    RefreshRequest:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+          description: Refresh token
+      required:
+        - refresh_token
+    RefreshResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 200
+        data:
+          type: object
+          properties:
+            token:
+              type: string
+              description: JWT token
+            refreshToken:
+              type: string
+              description: Refresh token
+          required:
+            - token
+            - refreshToken
+        error:
+          type: object
+      required:
+        - status
+        - data
+        - error
   responses:
     ErrorResponse:
       description: Error Response
@@ -160,6 +219,10 @@ components:
                   message:
                     type: string
                     example: Internal Server Error
+            required:
+              - status
+              - data
+              - error
     LoginSuccess:
       description: Admin login response
       content:
@@ -184,6 +247,10 @@ components:
                   message:
                     type: string
                     example: Bad Request
+            required:
+              - status
+              - data
+              - error
     NotContent:
       description: NotContent Request
       content:
@@ -198,3 +265,13 @@ components:
                 type: object
               error:
                 type: object
+            required:
+              - status
+              - data
+              - error
+    RefreshSuccess:
+      description: Admin refresh token response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RefreshResponse'

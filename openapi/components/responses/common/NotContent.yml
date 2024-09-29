@@ -11,3 +11,7 @@ content:
           type: object
         error:
           type: object
+      required:
+        - status
+        - data
+        - error
