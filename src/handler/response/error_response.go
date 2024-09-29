@@ -14,13 +14,11 @@ func ErrorResponse(status int, message string, err error) *api.ErrorResponseStat
 		return &api.ErrorResponseStatusCode{
 			StatusCode: http.StatusInternalServerError,
 			Response: api.ErrorResponse{
-				Status: api.NewOptInt(http.StatusInternalServerError),
-				Data:   nil,
-				Error: api.NewOptErrorResponseError(api.ErrorResponseError{
-					Message: api.NewOptString(
-						http.StatusText(http.StatusInternalServerError),
-					),
-				}),
+				Status: http.StatusInternalServerError,
+				Data:   api.ErrorResponseData{},
+				Error: api.ErrorResponseError{
+					Message: api.NewOptString(message),
+				},
 			},
 		}
 	}
@@ -35,11 +33,11 @@ func ErrorResponse(status int, message string, err error) *api.ErrorResponseStat
 	return &api.ErrorResponseStatusCode{
 		StatusCode: http.StatusInternalServerError,
 		Response: api.ErrorResponse{
-			Status: api.NewOptInt(http.StatusInternalServerError),
-			Data:   nil,
-			Error: api.NewOptErrorResponseError(api.ErrorResponseError{
+			Status: http.StatusInternalServerError,
+			Data:   api.ErrorResponseData{},
+			Error: api.ErrorResponseError{
 				Message: api.NewOptString(message),
-			}),
+			},
 		},
 	}
 }

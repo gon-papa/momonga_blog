@@ -9,6 +9,7 @@ import (
 type UserRepositoryInterface interface {
 	FindUserByUserID(userID string) (*model.Users, error)
 	FindUserByUuid(uuid string) (*model.Users, error)
+	FindUserByRefreshToken(refresh_token string) (*model.Users, error)
 	SaveRefreshToken(user *model.Users, refreshToken string, exp time.Time) (*model.Users, error)
 	SaveLogout(user *model.Users) error
 }
@@ -43,6 +44,19 @@ func (ur *UserRepository) FindUserByUuid(uuid string) (*model.Users, error) {
 	}
 
 	result := db.Where("uuid = ?", uuid).First(&ur.model)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &ur.model, nil
+}
+
+func (ur *UserRepository) FindUserByRefreshToken(refresh_token string) (*model.Users, error) {
+	db, err := database.GetDB()
+	if err != nil {
+		return nil, err
+	}
+
+	result := db.Where("refresh_token = ?", refresh_token).First(&ur.model)
 	if result.Error != nil {
 		return nil, result.Error
 	}
