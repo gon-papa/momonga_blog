@@ -1,0 +1,26 @@
+type: object
+properties:
+  uuid:
+    type: string
+    example: 12345678-1234-1234-1234-123456789012
+  year:
+    type: integer
+    example: 2021
+  month:
+    type: integer
+    example: 1
+  day:
+    type: integer
+    example: 1
+  title:
+    type: string
+    example: momonga blog
+  body:
+    type: string
+    example: momonga blog body
+  created_at:
+    type: string
+    example: 2021-01-01T00:00:00Z
+  updated_at:
+    type: string
+    example: 2021-01-01T00:00:00Z

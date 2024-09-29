@@ -1,0 +1,23 @@
+type: object
+properties:
+  status:
+    type: integer
+    example: 200
+  data:
+    type: object
+    properties:
+      blogs:
+        type: array
+        items:
+          $ref: '../common/Blog.yml'
+      pagenation:
+        $ref: '../common/Pagenation.yml'
+    required:
+      - token
+      - refreshToken
+  error:
+    type: object
+required:
+  - status
+  - data
+  - error

@@ -1,0 +1,15 @@
+type: object
+properties:
+  total:
+    type: integer
+    example: 1
+  page:
+    type: integer
+    example: 1
+  limit:
+    type: integer
+    example: 10
+required:
+  - total
+  - page
+  - limit
