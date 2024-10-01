@@ -25,3 +25,13 @@ func (h *Handler) NewErrorResponse(ctx context.Context, status int, message stri
 		err,
 	)
 }
+
+func (h *Handler) NewBadRequest(ctx context.Context, message string, err error) *api.BadRequest {
+	return &api.BadRequest{
+		Status: http.StatusBadRequest,
+		Data: api.BadRequestData{},
+		Error: api.BadRequestError{
+			Message: api.NewOptString(err.Error()),
+		},
+	}
+}

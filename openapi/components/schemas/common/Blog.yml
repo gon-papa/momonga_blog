@@ -18,9 +18,19 @@ properties:
   body:
     type: string
     example: momonga blog body
+  is_show:
+    type: boolean
+    example: true
+  tags:
+    type: array
+    items:
+      $ref: './Tag.yml'
   created_at:
     type: string
     example: 2021-01-01T00:00:00Z
   updated_at:
+    type: string
+    example: 2021-01-01T00:00:00Z
+  deleted_at:
     type: string
     example: 2021-01-01T00:00:00Z

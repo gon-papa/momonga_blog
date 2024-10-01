@@ -15,13 +15,7 @@ func (h *Handler) Login(ctx context.Context, req *api.LoginRequest) (api.LoginRe
 	token, err := useCase.Login(ctx, req.UserID, req.Password)
 	if err != nil {
 		logging.ErrorLogger.Error("Failed to login", "error", err)
-		return &api.BadRequest{
-			Status: http.StatusBadRequest,
-			Data: api.BadRequestData{},
-			Error: api.BadRequestError{
-				Message: api.NewOptString(err.Error()),
-			},
-		}, nil
+		return h.NewBadRequest(ctx, "failed to login", err), nil
 	}
 
 	data := api.LoginResponseData{
@@ -46,13 +40,7 @@ func (h *Handler) Logout(ctx context.Context) (api.LogoutRes, error) {
 
 	if err != nil {
 		logging.ErrorLogger.Error("Failed to logout", "error", err)
-		return &api.BadRequest{
-			Status: http.StatusBadRequest,
-			Data: api.BadRequestData{},
-			Error: api.BadRequestError{
-				Message: api.NewOptString(err.Error()),
-			},
-		}, nil
+		return h.NewBadRequest(ctx, "failed to logout", err), nil
 	}
 
 	return &api.NotContent{
@@ -68,13 +56,7 @@ func (h *Handler) RefreshToken(ctx context.Context, req *api.RefreshRequest) (ap
 	token, err := useCase.RefreshToken(ctx, refreshToken)
 	if err != nil {
 		logging.ErrorLogger.Error("Failed to refresh token", "error", err)
-		return &api.BadRequest{
-			Status: http.StatusBadRequest,
-			Data: api.BadRequestData{},
-			Error: api.BadRequestError{
-				Message: api.NewOptString(err.Error()),
-			},
-		}, nil
+		return h.NewBadRequest(ctx, "failed to refresh token", err), nil
 	}
 
 	return &api.RefreshResponse{

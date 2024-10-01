@@ -13,8 +13,8 @@ properties:
       pagenation:
         $ref: '../common/Pagenation.yml'
     required:
-      - token
-      - refreshToken
+      - blogs
+      - pagenation
   error:
     type: object
 required:

@@ -75,52 +75,11 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: page
-          in: query
-          description: Page number
-          required: false
-          schema:
-            type: integer
-            format: int32
-        - name: limit
-          in: query
-          description: Number of items per page
-          required: false
-          schema:
-            type: integer
-            format: int32
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
       responses:
         '200':
-          description: Get blog list
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 200
-                  data:
-                    type: object
-                    properties:
-                      blogs:
-                        type: object
-                      total:
-                        type: integer
-                        example: 1
-                      page:
-                        type: integer
-                        example: 1
-                      limit:
-                        type: integer
-                        example: 10
-                    required:
-                      - blogs
-                      - total
-                      - page
-                      - limit
-                  error:
-                    type: object
+          $ref: '#/components/responses/BlogSuccess'
         '400':
           $ref: '#/components/responses/BadRequest'
         default:
@@ -194,6 +153,92 @@ components:
           required:
             - token
             - refreshToken
+        error:
+          type: object
+      required:
+        - status
+        - data
+        - error
+    Tag:
+      type: object
+      properties:
+        uuid:
+          type: string
+          example: 12345678-1234-1234-1234-123456789012
+        name:
+          type: string
+          example: momonga
+    Blog:
+      type: object
+      properties:
+        uuid:
+          type: string
+          example: 12345678-1234-1234-1234-123456789012
+        year:
+          type: integer
+          example: 2021
+        month:
+          type: integer
+          example: 1
+        day:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: momonga blog
+        body:
+          type: string
+          example: momonga blog body
+        is_show:
+          type: boolean
+          example: true
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        created_at:
+          type: string
+          example: '2021-01-01T00:00:00Z'
+        updated_at:
+          type: string
+          example: '2021-01-01T00:00:00Z'
+        deleted_at:
+          type: string
+          example: '2021-01-01T00:00:00Z'
+    Pagenation:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 1
+        page:
+          type: integer
+          example: 1
+        limit:
+          type: integer
+          example: 10
+      required:
+        - total
+        - page
+        - limit
+    BlogResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 200
+        data:
+          type: object
+          properties:
+            blogs:
+              type: array
+              items:
+                $ref: '#/components/schemas/Blog'
+            pagenation:
+              $ref: '#/components/schemas/Pagenation'
+          required:
+            - blogs
+            - pagenation
         error:
           type: object
       required:
@@ -275,3 +320,26 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/RefreshResponse'
+    BlogSuccess:
+      description: Admin blog index
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BlogResponse'
+  parameters:
+    Page:
+      name: page
+      in: query
+      description: Page number
+      required: false
+      schema:
+        type: integer
+        format: int32
+    Limit:
+      name: limit
+      in: query
+      description: Number of items per page
+      required: false
+      schema:
+        type: integer
+        format: int32
