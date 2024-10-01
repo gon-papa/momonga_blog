@@ -1,0 +1,5 @@
+description: Admin blog list
+content:
+  application/json:
+    schema:
+      $ref: '../../schemas/admin/BlogListResponse.yml'

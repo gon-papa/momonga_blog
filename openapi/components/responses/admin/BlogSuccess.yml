@@ -1,4 +1,4 @@
-description: Admin blog index
+description: Admin blog
 content:
   application/json:
     schema:

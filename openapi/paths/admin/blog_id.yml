@@ -1,0 +1,17 @@
+get:
+  tags:
+    - blog
+  summary: Get blog
+  description: Get blog
+  operationId: getBlog
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: '../../components/parameters/Uuid.yml'
+  responses:
+    200:
+      $ref: '../../components/responses/admin/BlogSuccess.yml'
+    400:
+      $ref: '../../components/responses/common/BadRequest.yml'
+    default:
+      $ref: '../../components/responses/common/ErrorResponse.yml'

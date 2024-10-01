@@ -9,7 +9,7 @@ import (
 
 type BlogRepositoryInterface interface {
 	GetBlogs(page types.Page, limit types.Limit) (*types.BlogList, error)
-	FindBlogByUUID(uuid string) (*model.Blog, error)
+	FindBlogByUUID(uuid types.Uuid) (*model.Blog, error)
 }
 
 type BlogRepository struct {
@@ -47,13 +47,13 @@ func (br *BlogRepository) GetBlogs(page types.Page, limit types.Limit) (*types.B
 	return blogList, nil
 }
 
-func (br *BlogRepository) FindBlogByUUID(uuid string) (*model.Blog, error) {
+func (br *BlogRepository) FindBlogByUUID(uuid types.Uuid) (*model.Blog, error) {
 	db, err := database.GetDB()
 	if err != nil {
 		return nil, err
 	}
 
-	result := db.Where("uuid = ?", uuid).First(&br.model)
+	result := db.Where("uuid = ?", uuid.ToString()).First(&br.model)
 	if result.Error != nil {
 		return nil, result.Error
 	}

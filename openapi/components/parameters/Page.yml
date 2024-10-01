@@ -4,4 +4,4 @@ description: Page number
 required: false
 schema:
   type: integer
-  format: int32
+  format: int

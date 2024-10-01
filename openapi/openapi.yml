@@ -18,6 +18,8 @@ paths:
     $ref: paths/admin/refresh.yml
   /admin/blog:
     $ref: paths/admin/blog.yml
+  /admin/blog/{uuid}:
+    $ref: paths/admin/blog_id.yml
 
   # public
 components:

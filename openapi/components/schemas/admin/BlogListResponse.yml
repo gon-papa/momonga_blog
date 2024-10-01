@@ -6,10 +6,15 @@ properties:
   data:
     type: object
     properties:
-      blog:
-        $ref: '../common/Blog.yml'
+      blogs:
+        type: array
+        items:
+          $ref: '../common/Blog.yml'
+      pagenation:
+        $ref: '../common/Pagenation.yml'
     required:
       - blogs
+      - pagenation
   error:
     type: object
 required:

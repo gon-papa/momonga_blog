@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"momonga_blog/internal/types"
 	"momonga_blog/repository"
+	"momonga_blog/repository/model"
 )
 
 
 
 type BlogUseCaseInterface interface {
 	GetBlogList(page types.Page, limit types.Limit) (*types.BlogList, error)
+	GetBlog(uuid types.Uuid) (*model.Blog, error)
 }
 
 type blogUseCase struct {
@@ -33,4 +35,13 @@ func (buc *blogUseCase) GetBlogList(page types.Page, limit types.Limit) (*types.
 	}
 
 	return blogList, nil
+}
+
+func (buc *blogUseCase) GetBlog(uuid types.Uuid) (*model.Blog, error) {
+	blog, err := buc.repository.FindBlogByUUID(uuid)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get blog: %w", err)
+	}
+
+	return blog, nil
 }

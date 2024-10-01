@@ -2,6 +2,7 @@ type: object
 properties:
   total:
     type: integer
+    format: int64
     example: 1
   page:
     type: integer

@@ -23,3 +23,12 @@ func NewLimit(l int) Limit {
 func (l Limit) ToInt() int {
 	return int(l)
 }
+
+type Uuid string
+func NewUuid(uuid string) Uuid {
+	return Uuid(uuid)
+}
+
+func (u Uuid) ToString() string {
+	return string(u)
+}

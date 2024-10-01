@@ -79,6 +79,24 @@ paths:
         - $ref: '#/components/parameters/Limit'
       responses:
         '200':
+          $ref: '#/components/responses/BlogListSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /admin/blog/{uuid}:
+    get:
+      tags:
+        - blog
+      summary: Get blog
+      description: Get blog
+      operationId: getBlog
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Uuid'
+      responses:
+        '200':
           $ref: '#/components/responses/BlogSuccess'
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -210,6 +228,7 @@ components:
       properties:
         total:
           type: integer
+          format: int64
           example: 1
         page:
           type: integer
@@ -221,7 +240,7 @@ components:
         - total
         - page
         - limit
-    BlogResponse:
+    BlogListResponse:
       type: object
       properties:
         status:
@@ -239,6 +258,25 @@ components:
           required:
             - blogs
             - pagenation
+        error:
+          type: object
+      required:
+        - status
+        - data
+        - error
+    BlogResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 200
+        data:
+          type: object
+          properties:
+            blog:
+              $ref: '#/components/schemas/Blog'
+          required:
+            - blogs
         error:
           type: object
       required:
@@ -320,8 +358,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/RefreshResponse'
+    BlogListSuccess:
+      description: Admin blog list
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BlogListResponse'
     BlogSuccess:
-      description: Admin blog index
+      description: Admin blog
       content:
         application/json:
           schema:
@@ -334,7 +378,7 @@ components:
       required: false
       schema:
         type: integer
-        format: int32
+        format: int
     Limit:
       name: limit
       in: query
@@ -342,4 +386,12 @@ components:
       required: false
       schema:
         type: integer
-        format: int32
+        format: int
+    Uuid:
+      name: uuid
+      in: path
+      description: UUID
+      required: true
+      schema:
+        type: string
+        format: uuid

@@ -11,7 +11,7 @@ get:
     - $ref: '../../components/parameters/Limit.yml'
   responses:
     200:
-      $ref: '../../components/responses/admin/BlogSuccess.yml'
+      $ref: '../../components/responses/admin/BlogListSuccess.yml'
     400:
       $ref: '../../components/responses/common/BadRequest.yml'
     default:

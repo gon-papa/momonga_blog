@@ -4,4 +4,4 @@ description: Number of items per page
 required: false
 schema:
   type: integer
-  format: int32
+  format: int
