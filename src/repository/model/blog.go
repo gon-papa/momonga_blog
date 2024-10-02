@@ -14,7 +14,7 @@ type Blog struct {
 	IsShow	 bool   `gorm:"default:true" json:"is_show"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
-	DeletedAt  time.Time `json:"delete_at"`
+	DeletedAt  *time.Time `json:"delete_at"`
 
 	Tags []Tag `gorm:"many2many:blog_tags" json:"tags"`
 }

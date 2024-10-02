@@ -12,6 +12,7 @@ import (
 type BlogUseCaseInterface interface {
 	GetBlogList(page types.Page, limit types.Limit) (*types.BlogList, error)
 	GetBlog(uuid types.Uuid) (*model.Blog, error)
+	CreateBlog(blog types.CreateBlogData, tags []types.CreateTagData) (*model.Blog, error)
 }
 
 type blogUseCase struct {
@@ -44,4 +45,13 @@ func (buc *blogUseCase) GetBlog(uuid types.Uuid) (*model.Blog, error) {
 	}
 
 	return blog, nil
+}
+
+func (buc *blogUseCase) CreateBlog(blog types.CreateBlogData, tags []types.CreateTagData) (*model.Blog, error) {
+	savedBlog, err := buc.repository.CreateBlog(blog, tags)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create blog: %w", err)
+	}
+
+	return savedBlog, nil
 }

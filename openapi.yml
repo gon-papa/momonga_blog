@@ -4,10 +4,10 @@ info:
   version: 1.0.0
   description: momonga blog API
 servers:
-  - url: https://hogehogehogedummy.com
-    description: Production server
   - url: http://localhost:8080
     description: Local server
+  - url: https://hogehogehogedummy.com
+    description: Production server
 paths:
   /login:
     post:
@@ -80,6 +80,27 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/BlogListSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+    post:
+      tags:
+        - blog
+      summary: Create blog post
+      description: Create blog post
+      operationId: createBlogPost
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlogPostRequest'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/NotContent'
         '400':
           $ref: '#/components/responses/BadRequest'
         default:
@@ -264,6 +285,33 @@ components:
         - status
         - data
         - error
+    BlogPostRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: title of the blog post
+          maxLength: 255
+          minLength: 1
+        body:
+          type: string
+          description: body of the blog post
+          minLength: 1
+        is_show:
+          type: boolean
+          description: whether the blog post is shown or not
+        tags:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 20
+          description: tags of the blog post
+      required:
+        - title
+        - body
+        - is_show
+        - tags
     BlogResponse:
       type: object
       properties:
@@ -275,6 +323,10 @@ components:
           properties:
             blog:
               $ref: '#/components/schemas/Blog'
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/Tag'
           required:
             - blogs
         error:

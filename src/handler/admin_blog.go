@@ -5,6 +5,7 @@ import (
 	"momonga_blog/api"
 	r "momonga_blog/handler/resource"
 	"momonga_blog/internal/blog"
+	"momonga_blog/internal/logging"
 	t "momonga_blog/internal/types"
 	"net/http"
 )
@@ -16,6 +17,7 @@ func (h *Handler) GetBlogList(ctx context.Context, params api.GetBlogListParams)
 	blogs, err := useCase.GetBlogList(page, limit)
 
 	if err != nil {
+		logging.ErrorLogger.Error("Failed to logout", "error", err)
 		return h.NewBadRequest(ctx, "failed to get blog list", err), nil
 	}
 
@@ -36,6 +38,7 @@ func (h *Handler) GetBlog(ctx context.Context, params api.GetBlogParams) (api.Ge
 	uuid := t.NewUuid(params.UUID.String())
 	blog, err := useCase.GetBlog(uuid)
 	if err != nil {
+		logging.ErrorLogger.Error("Failed to logout", "error", err)
 		return h.NewBadRequest(ctx, "failed to get blog", err), nil
 	}
 
@@ -58,5 +61,40 @@ func (h *Handler) GetBlog(ctx context.Context, params api.GetBlogParams) (api.Ge
 			Blog: api.NewOptBlog(rBlog),
 		},
 		Error: api.BlogResponseError{},
+	}, nil
+}
+
+func (h *Handler) CreateBlogPost(ctx context.Context, params *api.BlogPostRequest) (api.CreateBlogPostRes, error) {
+	blogData := t.NewCreateBlogData(
+		nil,
+		nil,
+		nil,
+		params.Title,
+		params.Body,
+		params.IsShow,
+	)
+
+	var tags []t.CreateTagData
+	if len(params.Tags) != 0 {
+		for _, tag := range params.Tags {
+			tagData := t.NewCreateTagData(tag)
+			tags = append(tags, tagData)
+		}
+	} else {
+		tags = nil
+	}
+
+	useCase := blog.NewBlogUseCase()
+	_, err := useCase.CreateBlog(blogData, tags)
+	if err != nil {
+		logging.ErrorLogger.Error("Failed to logout", "error", err)
+		return h.NewBadRequest(ctx, "failed to create blog", err), nil
+	}
+
+
+	return &api.NotContent{
+		Status: http.StatusOK,
+		Data: api.NotContentData{},
+		Error: api.NotContentError{},
 	}, nil
 }

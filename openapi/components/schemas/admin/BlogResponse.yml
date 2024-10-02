@@ -8,6 +8,10 @@ properties:
     properties:
       blog:
         $ref: '../common/Blog.yml'
+      tags:
+        type: array
+        items:
+          $ref: '../common/Tag.yml'
     required:
       - blogs
   error:

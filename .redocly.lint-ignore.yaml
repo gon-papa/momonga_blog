@@ -4,7 +4,9 @@ openapi/openapi.yml:
   info-license:
     - '#/info'
   no-server-example.com:
-    - '#/servers/1/url'
+    - '#/servers/0/url'
+  no-server-localhost:
+    - '#/servers/0/url'
 openapi/paths/admin/login.yml:
   security-defined:
     - '#/post'

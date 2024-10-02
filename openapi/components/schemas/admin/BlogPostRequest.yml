@@ -1,0 +1,26 @@
+type: object
+properties:
+  title:
+    type: string
+    description: title of the blog post 
+    maxLength: 255
+    minLength: 1
+  body:
+    type: string
+    description: body of the blog post
+    minLength: 1
+  is_show:
+    type: boolean
+    description: whether the blog post is shown or not
+  tags:
+    type: array
+    items:
+      type: string
+      minLength: 1
+      maxLength: 20
+    description: tags of the blog post
+required:
+  - title
+  - body
+  - is_show
+  - tags

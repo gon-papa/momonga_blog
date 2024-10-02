@@ -4,10 +4,10 @@ info:
   version: 1.0.0
   description: momonga blog API
 servers:
-  - url: https://hogehogehogedummy.com
-    description: Production server
   - url: http://localhost:8080
     description: Local server
+  - url: https://hogehogehogedummy.com
+    description: Production server
 paths:
   # admin
   /login:
