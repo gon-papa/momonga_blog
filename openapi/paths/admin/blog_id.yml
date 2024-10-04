@@ -15,3 +15,27 @@ get:
       $ref: '../../components/responses/common/BadRequest.yml'
     default:
       $ref: '../../components/responses/common/ErrorResponse.yml'
+
+put:
+  tags:
+    - blog
+  summary: Update blog
+  description: Update blog
+  operationId: updateBlog
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/admin/BlogUpdateRequest.yml'
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: '../../components/parameters/Uuid.yml'
+  responses:
+    200:
+      $ref: '../../components/responses/common/NotContent.yml'
+    400:
+      $ref: '../../components/responses/common/BadRequest.yml'
+    default:
+      $ref: '../../components/responses/common/ErrorResponse.yml'

@@ -1,5 +1,9 @@
 type: object
 properties:
+  uuid: 
+    type: string
+    description: uuid of the blog post
+    format: uuid
   title:
     type: string
     description: title of the blog post 

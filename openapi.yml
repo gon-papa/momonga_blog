@@ -123,6 +123,29 @@ paths:
           $ref: '#/components/responses/BadRequest'
         default:
           $ref: '#/components/responses/ErrorResponse'
+    put:
+      tags:
+        - blog
+      summary: Update blog
+      description: Update blog
+      operationId: updateBlog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlogUpdateRequest'
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Uuid'
+      responses:
+        '200':
+          $ref: '#/components/responses/NotContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
 components:
   securitySchemes:
     bearerAuth:
@@ -300,12 +323,12 @@ components:
         is_show:
           type: boolean
           description: whether the blog post is shown or not
-        tags:
+        tag_uuids:
           type: array
           items:
             type: string
-            minLength: 1
-            maxLength: 20
+            description: uuids of the tags of the blog post
+            format: uuid
           description: tags of the blog post
       required:
         - title
@@ -335,6 +358,37 @@ components:
         - status
         - data
         - error
+    BlogUpdateRequest:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: uuid of the blog post
+          format: uuid
+        title:
+          type: string
+          description: title of the blog post
+          maxLength: 255
+          minLength: 1
+        body:
+          type: string
+          description: body of the blog post
+          minLength: 1
+        is_show:
+          type: boolean
+          description: whether the blog post is shown or not
+        tag_uuids:
+          type: array
+          items:
+            type: string
+            description: uuids of the tags of the blog post
+            format: uuid
+          description: tags of the blog post
+      required:
+        - title
+        - body
+        - is_show
+        - tags
   responses:
     ErrorResponse:
       description: Error Response
