@@ -37,3 +37,19 @@ func NewCreateBlogData(year *int, month *int, day *int, title string, body strin
         IsShow: isShow,
     }
 }
+
+type UpdateBlogData struct {
+    UUID     string
+    Title    string
+    Body     string
+    IsShow   bool
+}
+
+func NewUpdateBlogData(uuid string, title string, body string, isShow bool) UpdateBlogData {
+    return UpdateBlogData{
+        UUID:   uuid,
+        Title:  title,
+        Body:   body,
+        IsShow: isShow,
+    }
+}

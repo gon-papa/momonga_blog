@@ -20,7 +20,7 @@ func MapBlogsToAPI(blogs []*model.Blog) []api.Blog {
             IsShow:    api.NewOptBool(blog.IsShow),
             CreatedAt: api.NewOptString(blog.CreatedAt.String()),
             UpdatedAt: api.NewOptString(blog.UpdatedAt.String()),
-            DeletedAt: api.NewOptString(blog.DeletedAt.String()),
+            DeletedAt: api.NewOptString(blog.DeletedAtToString()),
             Tags:      MapTagsToAPI(blog.Tags), // タグもマッピング
         })
     }
@@ -29,7 +29,7 @@ func MapBlogsToAPI(blogs []*model.Blog) []api.Blog {
 }
 
 // タグのリストをAPI用にマッピング
-func MapTagsToAPI(tags []model.Tag) []api.Tag {
+func MapTagsToAPI(tags []*model.Tag) []api.Tag {
     var apiTags []api.Tag
 	if len(tags) == 0 {
 		apiTags = []api.Tag{}

@@ -1,6 +1,8 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
 
 type Blog struct {
@@ -16,5 +18,21 @@ type Blog struct {
 	UpdatedAt time.Time `json:"updated_at"`
 	DeletedAt  *time.Time `json:"delete_at"`
 
-	Tags []Tag `gorm:"many2many:blog_tags" json:"tags"`
+	Tags []*Tag `gorm:"many2many:blog_tags" json:"tags"`
+}
+
+func (b *Blog) BeforeCreate(uuid string) {
+	b.UUID = uuid
+	b.Year = int(time.Now().Year())
+	b.Month = int(time.Now().Month())
+	b.Day = int(time.Now().Day())
+	b.CreatedAt = time.Now()
+	b.UpdatedAt = time.Now()
+}
+
+func (b *Blog) DeletedAtToString() string {
+	if b.DeletedAt != nil {
+		return b.DeletedAt.String()
+	}
+	return ""
 }

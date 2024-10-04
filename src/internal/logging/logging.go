@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"runtime"
 )
 
 var (
@@ -46,6 +47,12 @@ func Init() error {
     AccessLogger = slog.New(accessHandler)
 
     return nil
+}
+
+func LogWithStackTrace() {
+    buf := make([]byte, 1024)
+    n := runtime.Stack(buf, false)
+    ErrorLogger.Error("Stack trace", "stack", string(buf[:n]))
 }
 
 func Close() {

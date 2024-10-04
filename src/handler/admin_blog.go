@@ -52,7 +52,8 @@ func (h *Handler) GetBlog(ctx context.Context, params api.GetBlogParams) (api.Ge
 		IsShow: api.NewOptBool(blog.IsShow),
 		CreatedAt: api.NewOptString(blog.CreatedAt.String()),
 		UpdatedAt: api.NewOptString(blog.UpdatedAt.String()),
-		DeletedAt: api.NewOptString(blog.DeletedAt.String()),
+		DeletedAt: api.NewOptString(blog.DeletedAtToString()),
+		Tags: r.MapTagsToAPI(blog.Tags),
 	}
 
 	return &api.BlogResponse{
@@ -74,23 +75,46 @@ func (h *Handler) CreateBlogPost(ctx context.Context, params *api.BlogPostReques
 		params.IsShow,
 	)
 
-	var tags []t.CreateTagData
-	if len(params.Tags) != 0 {
-		for _, tag := range params.Tags {
-			tagData := t.NewCreateTagData(tag)
-			tags = append(tags, tagData)
-		}
-	} else {
-		tags = nil
+	var tagUuids []string
+	for _, tag := range params.TagUuids {
+		tagUuids = append(tagUuids, tag.String())
 	}
 
 	useCase := blog.NewBlogUseCase()
-	_, err := useCase.CreateBlog(blogData, tags)
+	_, err := useCase.CreateBlog(blogData, tagUuids)
 	if err != nil {
 		logging.ErrorLogger.Error("Failed to logout", "error", err)
 		return h.NewBadRequest(ctx, "failed to create blog", err), nil
 	}
 
+
+	return &api.NotContent{
+		Status: http.StatusOK,
+		Data: api.NotContentData{},
+		Error: api.NotContentError{},
+	}, nil
+}
+
+func (h *Handler) UpdateBlog(ctx context.Context, req *api.BlogUpdateRequest, params api.UpdateBlogParams) (api.UpdateBlogRes, error) {
+	blogData := t.NewUpdateBlogData(
+		params.UUID.String(),
+		req.Title,
+		req.Body,
+		req.IsShow,
+	)
+
+	var tagUuids []string
+	for _, tag := range req.TagUuids {
+		tagUuids = append(tagUuids, tag.String())
+	}
+
+	useCase := blog.NewBlogUseCase()
+	_, err := useCase.UpdateBlog(t.NewUuid(params.UUID.String()), blogData, tagUuids)
+	if err != nil {
+		logging.LogWithStackTrace()
+		logging.ErrorLogger.Error("Failed to update", "error", err)
+		return h.NewBadRequest(ctx, "failed to update blog", err), nil
+	}
 
 	return &api.NotContent{
 		Status: http.StatusOK,
