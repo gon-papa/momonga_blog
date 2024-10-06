@@ -14,6 +14,7 @@ func (h *Handler) Login(ctx context.Context, req *api.LoginRequest) (api.LoginRe
 	useCase := auth.NewLoginUseCase()
 	token, err := useCase.Login(ctx, req.UserID, req.Password)
 	if err != nil {
+		logging.LogWithStackTrace()
 		logging.ErrorLogger.Error("Failed to login", "error", err)
 		return h.NewBadRequest(ctx, "failed to login", err), nil
 	}
@@ -39,6 +40,7 @@ func (h *Handler) Logout(ctx context.Context) (api.LogoutRes, error) {
 	err := useCase.Logout(ctx)
 
 	if err != nil {
+		logging.LogWithStackTrace()
 		logging.ErrorLogger.Error("Failed to logout", "error", err)
 		return h.NewBadRequest(ctx, "failed to logout", err), nil
 	}
@@ -55,6 +57,7 @@ func (h *Handler) RefreshToken(ctx context.Context, req *api.RefreshRequest) (ap
 	refreshToken := req.RefreshToken
 	token, err := useCase.RefreshToken(ctx, refreshToken)
 	if err != nil {
+		logging.LogWithStackTrace()
 		logging.ErrorLogger.Error("Failed to refresh token", "error", err)
 		return h.NewBadRequest(ctx, "failed to refresh token", err), nil
 	}

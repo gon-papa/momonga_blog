@@ -38,6 +38,7 @@ func (h *Handler) GetBlog(ctx context.Context, params api.GetBlogParams) (api.Ge
 	uuid := t.NewUuid(params.UUID.String())
 	blog, err := useCase.GetBlog(uuid)
 	if err != nil {
+		logging.LogWithStackTrace()
 		logging.ErrorLogger.Error("Failed to logout", "error", err)
 		return h.NewBadRequest(ctx, "failed to get blog", err), nil
 	}
@@ -83,6 +84,7 @@ func (h *Handler) CreateBlogPost(ctx context.Context, params *api.BlogPostReques
 	useCase := blog.NewBlogUseCase()
 	_, err := useCase.CreateBlog(blogData, tagUuids)
 	if err != nil {
+		logging.LogWithStackTrace()
 		logging.ErrorLogger.Error("Failed to logout", "error", err)
 		return h.NewBadRequest(ctx, "failed to create blog", err), nil
 	}

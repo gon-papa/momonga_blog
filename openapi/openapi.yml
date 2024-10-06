@@ -20,6 +20,8 @@ paths:
     $ref: paths/admin/blog.yml
   /admin/blog/{uuid}:
     $ref: paths/admin/blog_id.yml
+  /admin/tags:
+    $ref: paths/admin/tags.yml
 
   # public
 components:

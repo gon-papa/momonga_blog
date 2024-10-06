@@ -1,0 +1,9 @@
+name: uuid
+in: query
+description: UUID
+required: false
+schema:
+  type: string
+  format: uuid
+  minLength: 0
+  maxLength: 36

@@ -146,6 +146,24 @@ paths:
           $ref: '#/components/responses/BadRequest'
         default:
           $ref: '#/components/responses/ErrorResponse'
+  /admin/tags:
+    get:
+      tags:
+        - tag
+      summary: Get tag list
+      description: Get tag list
+      operationId: getTagList
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/QueryUuid'
+      responses:
+        '200':
+          $ref: '#/components/responses/TagListSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
 components:
   securitySchemes:
     bearerAuth:
@@ -389,6 +407,27 @@ components:
         - body
         - is_show
         - tags
+    TagListResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 200
+        data:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/Tag'
+          required:
+            - tags
+        error:
+          type: object
+      required:
+        - status
+        - data
+        - error
   responses:
     ErrorResponse:
       description: Error Response
@@ -476,6 +515,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/BlogResponse'
+    TagListSuccess:
+      description: Admin tag list
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TagListResponse'
   parameters:
     Page:
       name: page
@@ -501,3 +546,13 @@ components:
       schema:
         type: string
         format: uuid
+    QueryUuid:
+      name: uuid
+      in: query
+      description: UUID
+      required: false
+      schema:
+        type: string
+        format: uuid
+        minLength: 0
+        maxLength: 36

@@ -1,0 +1,17 @@
+get:
+  tags:
+    - tag
+  summary: Get tag list
+  description: Get tag list
+  operationId: getTagList
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: '../../components/parameters/QueryUuid.yml'
+  responses:
+    200:
+      $ref: '../../components/responses/admin/TagListSuccess.yml'
+    400:
+      $ref: '../../components/responses/common/BadRequest.yml'
+    default:
+      $ref: '../../components/responses/common/ErrorResponse.yml'

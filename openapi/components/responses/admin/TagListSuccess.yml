@@ -1,0 +1,5 @@
+description: Admin tag list
+content:
+  application/json:
+    schema:
+      $ref: '../../schemas/admin/TagListResponse.yml'
