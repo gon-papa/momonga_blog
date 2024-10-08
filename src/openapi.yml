@@ -9,7 +9,7 @@ servers:
   - url: https://hogehogehogedummy.com
     description: Production server
 paths:
-  /login:
+  /api/login:
     post:
       tags:
         - admin
@@ -29,7 +29,7 @@ paths:
           $ref: '#/components/responses/BadRequest'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  /logout:
+  /api/logout:
     post:
       tags:
         - admin
@@ -45,7 +45,7 @@ paths:
           $ref: '#/components/responses/BadRequest'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  /refresh:
+  /api/refresh:
     post:
       tags:
         - admin
@@ -65,7 +65,7 @@ paths:
           $ref: '#/components/responses/BadRequest'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  /admin/blog:
+  /api/admin/blog:
     get:
       tags:
         - blog
@@ -105,7 +105,7 @@ paths:
           $ref: '#/components/responses/BadRequest'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  /admin/blog/{uuid}:
+  /api/admin/blog/{uuid}:
     get:
       tags:
         - blog
@@ -146,7 +146,7 @@ paths:
           $ref: '#/components/responses/BadRequest'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  /admin/tags:
+  /api/admin/tags:
     get:
       tags:
         - tag
@@ -160,6 +160,56 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/TagListSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+    post:
+      tags:
+        - tag
+      summary: Create tag
+      description: Create tag
+      operationId: createTag
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagCreateRequest'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/NotContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /api/admin/image/upload:
+    post:
+      tags:
+        - admin
+      summary: Admin image upload
+      description: Admin image upload
+      operationId: uploadImage
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: image file
+              required:
+                - image
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/NotContent'
         '400':
           $ref: '#/components/responses/BadRequest'
         default:
@@ -428,6 +478,14 @@ components:
         - status
         - data
         - error
+    TagCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Tag name
+      required:
+        - name
   responses:
     ErrorResponse:
       description: Error Response

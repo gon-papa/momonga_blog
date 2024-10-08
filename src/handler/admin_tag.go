@@ -9,6 +9,20 @@ import (
 	"net/http"
 )
 
+func (h *Handler) CreateTag(ctx context.Context, req *api.TagCreateRequest) (api.CreateTagRes, error) {
+	useCase := tag.NewTagUseCase()
+	err := useCase.CreateTag(req.Name)
+	if err != nil {
+		return h.NewBadRequest(ctx, "failed to create tag", err), nil
+	}
+
+	return &api.NotContent{
+		Status: http.StatusOK,
+		Data: api.NotContentData{},
+		Error: api.NotContentError{},
+	}, nil
+}
+
 
 func (h *Handler) GetTagList(ctx context.Context, params api.GetTagListParams) (api.GetTagListRes, error) {
 	useCase := tag.NewTagUseCase()

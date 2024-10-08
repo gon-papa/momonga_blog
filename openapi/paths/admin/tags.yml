@@ -15,3 +15,25 @@ get:
       $ref: '../../components/responses/common/BadRequest.yml'
     default:
       $ref: '../../components/responses/common/ErrorResponse.yml'
+
+post:
+  tags:
+    - tag
+  summary: Create tag
+  description: Create tag
+  operationId: createTag
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/admin/TagCreateRequest.yml'
+  security:
+    - bearerAuth: []
+  responses:
+    200:
+      $ref: '../../components/responses/common/NotContent.yml'
+    400:
+      $ref: '../../components/responses/common/BadRequest.yml'
+    default:
+      $ref: '../../components/responses/common/ErrorResponse.yml'

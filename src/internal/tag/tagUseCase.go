@@ -9,6 +9,7 @@ import (
 
 type TagUseCaseInterface interface {
 	GetTagList(blogUuid *types.Uuid) ([]*model.Tag, error)
+	CreateTag(tagName string) error
 }
 
 type tagUseCase struct {
@@ -23,6 +24,19 @@ func NewTagUseCase() TagUseCaseInterface {
 		repository: repository.NewTagRepository(),
 		blogRepository: repository.NewBlogRepository(),
 	}
+}
+
+func (tuc *tagUseCase) CreateTag(tagName string) error {
+	exsistTag, _ := tuc.repository.GetByName(tagName)
+	if exsistTag != nil {
+		return nil
+	}
+
+	err := tuc.repository.CreateTag(tagName)
+	if err != nil {
+		return fmt.Errorf("failed to create tag: %w", err)
+	}
+	return nil
 }
 
 func (tuc *tagUseCase) GetTagList(blogUuid *types.Uuid) ([]*model.Tag, error) {

@@ -10,18 +10,20 @@ servers:
     description: Production server
 paths:
   # admin
-  /login:
+  /api/login:
     $ref: paths/admin/login.yml
-  /logout:
+  /api/logout:
     $ref: paths/admin/logout.yml
-  /refresh:
+  /api/refresh:
     $ref: paths/admin/refresh.yml
-  /admin/blog:
+  /api/admin/blog:
     $ref: paths/admin/blog.yml
-  /admin/blog/{uuid}:
+  /api/admin/blog/{uuid}:
     $ref: paths/admin/blog_id.yml
-  /admin/tags:
+  /api/admin/tags:
     $ref: paths/admin/tags.yml
+  /api/admin/image/upload:
+    $ref: paths/admin/image_upload.yml
 
   # public
 components:

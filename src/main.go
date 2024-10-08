@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"momonga_blog/api"
 	"momonga_blog/config"
+	"momonga_blog/consts"
 	"momonga_blog/database"
 	"momonga_blog/handler"
 	"momonga_blog/internal/auth"
@@ -68,27 +69,43 @@ func run(context context.Context) error {
     url := fmt.Sprintf("http://%s", l.Addr().String())
     logging.AppLogger.Info("サーバーの起動に成功しました。", "url", url)
 
-        // ハンドラーの初期化
-        h := getHandler()
-        srv, err := getServer(h)
-        if err != nil {
-            logging.ErrorLogger.Error("serverの作成に失敗しました。", "error", err)
-            return err
-        }
+    // ハンドラーの初期化
+    mux := http.NewServeMux()
+    if err := getDynamicHandler(mux); err != nil {
+        logging.ErrorLogger.Error("ハンドラーの作成に失敗しました。", "error", err)
+        return err
+    }
+
+    logging.ErrorLogger.Error(cnf.Env)
+    logging.ErrorLogger.Error(consts.DevEnv)
+    if cnf.Env == consts.DevEnv {
+        getStaticHandler(mux)
+    }
     
-    addMiddlewareSrv := addMiddleware(srv)
+    addMiddlewareSrv := addMiddleware(mux)
     s := NewServer(l, addMiddlewareSrv)
     return s.Run(context)
 }
 
-func getHandler() *handler.Handler {
-    return &handler.Handler{}
+func getDynamicHandler(mux *http.ServeMux) error {
+    // API ハンドラーの初期化
+    handler := &handler.Handler{}
+    authHandler := auth.NewLoginUseCase()
+    apiHandler, err := api.NewServer(handler, authHandler)
+    if err != nil {
+        logging.ErrorLogger.Error("API サーバーの作成に失敗しました。", "error", err)
+        return err
+    }
+    mux.Handle(consts.ApiPathPrefix, http.StripPrefix("/api", apiHandler))
+
+    return nil
 }
 
-func getServer(handler *handler.Handler) (*api.Server, error) {
-    authHandler := auth.NewLoginUseCase()
-    
-    return api.NewServer(handler, authHandler)
+func getStaticHandler(mux *http.ServeMux) {
+    staticFiles := http.FileServer(http.Dir(consts.StaticFileDir))
+    imageHandler := http.StripPrefix(consts.StaticFileEndpoint, staticFiles)
+
+    mux.Handle(consts.StaticFileEndpoint, imageHandler)
 }
 
 func addMiddleware(h http.Handler) http.Handler {
